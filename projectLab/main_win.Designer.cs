@@ -35,18 +35,16 @@
 			this.menu_bd_item_break = new System.Windows.Forms.ToolStripMenuItem();
 
 			this.work_frame = new System.Windows.Forms.TabControl();
-			this.solvers_tab = new System.Windows.Forms.TabPage();
-			this.solvers_container = new System.Windows.Forms.Panel();
-			this.container_instruments = new table_instruments();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.fuel_sale_tab = new System.Windows.Forms.TabPage();
+			this.fuel_sale_container = new System.Windows.Forms.Panel();
+			this.fuel_sale_instruments = new table_instruments();
 
 			this.main_status.SuspendLayout();
 			this.main_menu.SuspendLayout();
 
 			this.work_frame.SuspendLayout();
-			this.solvers_tab.SuspendLayout();
-			this.solvers_container.SuspendLayout();
-			this.tabPage2.SuspendLayout();
+			this.fuel_sale_tab.SuspendLayout();
+			this.fuel_sale_container.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// main_status
@@ -135,8 +133,7 @@
 			// work_frame
 			// 
 			this.work_frame.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-			this.work_frame.Controls.Add(this.solvers_tab);
-			this.work_frame.Controls.Add(this.tabPage2);
+			//this.work_frame.Controls.Add(this.fuel_sale_tab);
 			this.work_frame.Location = new System.Drawing.Point(0, 24);
 			this.work_frame.Margin = new System.Windows.Forms.Padding(0);
 			this.work_frame.Name = "work_frame";
@@ -145,38 +142,38 @@
 			this.work_frame.Visible = false;
 			//this.work_frame.TabIndex = 2;
 			// 
-			// solvers_tab
+			// fuel_sale_tab
 			// 
-			this.solvers_tab.Controls.Add(this.container_instruments);
-			this.solvers_tab.Controls.Add(this.solvers_container);
-			this.solvers_tab.Location = new System.Drawing.Point(4, 22);
-			this.solvers_tab.Name = "solvers_tab";
-			this.solvers_tab.Padding = new System.Windows.Forms.Padding(3);
-			this.solvers_tab.Size = new System.Drawing.Size(584, 301);
-			this.solvers_tab.TabIndex = 0;
-			this.solvers_tab.Text = "Сотрудники";
-			this.solvers_tab.UseVisualStyleBackColor = true;
+			this.fuel_sale_tab.Controls.Add(this.fuel_sale_instruments);
+			this.fuel_sale_tab.Controls.Add(this.fuel_sale_container);
+			this.fuel_sale_tab.Location = new System.Drawing.Point(4, 22);
+			this.fuel_sale_tab.Name = "fuel_sale_tab";
+			this.fuel_sale_tab.Padding = new System.Windows.Forms.Padding(3);
+			this.fuel_sale_tab.Size = new System.Drawing.Size(584, 301);
+			this.fuel_sale_tab.TabIndex = 0;
+			this.fuel_sale_tab.Text = "Продажа";
+			this.fuel_sale_tab.UseVisualStyleBackColor = true;
 			// 
-			// solvers_container
+			// fuel_sale_container
 			// 
-			this.solvers_container.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-			this.solvers_container.AutoScroll = true;
-			//this.solvers_container.Controls.Add(this.solvers_table);
-			this.solvers_container.Location = new System.Drawing.Point(0, 0);
-			this.solvers_container.Name = "solvers_container";
-			this.solvers_container.Size = new System.Drawing.Size(584, 245);
-			this.solvers_container.TabIndex = 0;
+			this.fuel_sale_container.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			this.fuel_sale_container.AutoScroll = true;
+			//this.fuel_sale_container.Controls.Add(this.solvers_table);
+			this.fuel_sale_container.Location = new System.Drawing.Point(0, 0);
+			this.fuel_sale_container.Name = "fuel_sale_container";
+			this.fuel_sale_container.Size = new System.Drawing.Size(584, 245);
+			this.fuel_sale_container.TabIndex = 0;
 			// 
-			// container_instruments
+			// fuel_sale_instruments
 			// 
-			this.container_instruments.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.container_instruments.Location = new System.Drawing.Point(3, 251);
-			this.container_instruments.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.container_instruments.Name = "container_instruments";
-			this.container_instruments.Size = new System.Drawing.Size(578, 47);
-			this.container_instruments.TabIndex = 1;
-			this.container_instruments.TabStop = false;
-			this.container_instruments.Text = "Инструменты";
+			this.fuel_sale_instruments.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.fuel_sale_instruments.Location = new System.Drawing.Point(3, 251);
+			this.fuel_sale_instruments.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.fuel_sale_instruments.Name = "fuel_sale_instruments";
+			this.fuel_sale_instruments.Size = new System.Drawing.Size(578, 47);
+			this.fuel_sale_instruments.TabIndex = 1;
+			this.fuel_sale_instruments.TabStop = false;
+			this.fuel_sale_instruments.Text = "Инструменты";
 
 			// 
 			// main_win
@@ -190,17 +187,17 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(300, 300);
 			this.Name = "main_win";
-			this.Text = "RADIOFAN Slave Manager";
+			this.Text = "Королева бензоколонки";
 			this.main_status.ResumeLayout(false);
 			this.main_status.PerformLayout();
 			this.main_menu.ResumeLayout(false);
 			this.main_menu.PerformLayout();
 			this.work_frame.ResumeLayout(false);
-			this.solvers_tab.ResumeLayout(false);
-			this.solvers_container.ResumeLayout(false);
-			this.solvers_container.PerformLayout();
-			this.container_instruments.ResumeLayout(false);
-			this.container_instruments.PerformLayout();
+			this.fuel_sale_tab.ResumeLayout(false);
+			this.fuel_sale_container.ResumeLayout(false);
+			this.fuel_sale_container.PerformLayout();
+			this.fuel_sale_instruments.ResumeLayout(false);
+			this.fuel_sale_instruments.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -219,9 +216,8 @@
 				private System.Windows.Forms.ToolStripMenuItem menu_bd_item_break;
 
 		private System.Windows.Forms.TabControl work_frame;
-			private System.Windows.Forms.TabPage solvers_tab;
-				private System.Windows.Forms.Panel solvers_container;
-				private table_instruments container_instruments;
-			private System.Windows.Forms.TabPage tabPage2;
+			private System.Windows.Forms.TabPage fuel_sale_tab;
+				private System.Windows.Forms.Panel fuel_sale_container;
+				private table_instruments fuel_sale_instruments;
 	}
 }

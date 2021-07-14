@@ -21,42 +21,6 @@ namespace projectLab {
 		VIEW
 	};
 
-	enum user_type : byte{
-		NONE		= 0,//гость, нихрена не может
-		//Данные + Администрирование
-		ADMIN		= 1,//может всё, также управлять пользователями
-		/*
-		 * SELECT `users`
-		 * 
-		 * SELECT `containers`
-		 * SELECT `fuel_types`
-		 * SELECT `fuel_transactions`
-		 * 
-		 * SELECT, UPDATE, INSERT, DELETE `shifts`
-		 * SELECT, UPDATE, INSERT, DELETE `slaves_shifts`
-		 * SELECT, UPDATE, INSERT, DELETE `slaves`
-		 */
-		MANAGER		= 2,//может управлять сменами, смотреть статистику
-		/*
-		 * SELECT `users`
-		 * 
-		 * SELECT `pumps`
-		 * SELECT `containers`
-		 * SELECT `fuel_types`
-		 * SELECT, UPDATE, INSERT `fuel_transactions`
-		 */
-		PAYMASTER	= 3,//может продавать бензыч
-		/*
-		 * SELECT `users`
-		 * 
-		 * SELECT, UPDATE `pumps`
-		 * SELECT, UPDATE `containers`
-		 * SELECT `fuel_types`
-		 * SELECT, UPDATE, INSERT `fuel_transactions`
-		 */
-		ENGINEER	= 4 //может управлять баками и колонками, принимать бензыч
-	};
-
 
 	public partial class main_win:Form {
 
@@ -66,6 +30,8 @@ namespace projectLab {
 		private MySqlConnection current_SqlConnection;
 
 		private User current_user;
+
+		private Model_fuel_sale fuel_sale_data;
 
 		//private solvers_table_data solvers_data;
 
@@ -84,6 +50,7 @@ namespace projectLab {
 			current_connection_data = null;
 			current_SqlConnection = null;
 			current_user = new User();
+			fuel_sale_data = null;
 		}
 
 		//триггер после загрузки формы
@@ -95,10 +62,10 @@ namespace projectLab {
 			this.menu_bd_item_current.Enabled = true;
 			this.menu_bd_item_break.Enabled = true;
 			load_current_user();
+			create_tabs();
 
-
-			//solvers_data = new solvers_table_data(ref container_instruments, ref current_SqlConnection);
-			//this.solvers_container.Controls.Add(solvers_data.solvers_table);
+			//solvers_data = new solvers_table_data(ref fuel_sale_instruments, ref current_SqlConnection);
+			//this.fuel_sale_container.Controls.Add(solvers_data.solvers_table);
 			this.work_frame.Visible = true;
 		}
 
@@ -107,8 +74,9 @@ namespace projectLab {
 			this.menu_bd_item_current.Enabled = false;
 			this.menu_bd_item_break.Enabled = false;
 			this.work_frame.Visible = false;
+			delete_tabs();
 			this.current_user.reset();
-			//this.solvers_container.Controls.RemoveByKey("solvers_table");
+			//this.fuel_sale_container.Controls.RemoveByKey("solvers_table");
 			//solvers_data = null;
 		}
 
@@ -171,6 +139,28 @@ namespace projectLab {
 				this.current_user.load((user_type)Convert.ToInt32(result.GetValue(1)), current_connection_data.user, Convert.ToUInt64(result.GetValue(0)));
 			}
 			result.Close();
+		}
+
+		private void create_tabs(){
+			if(this.current_user.get_type() == user_type.NONE){
+				MessageBox.Show("Пользователь не опознан, обратитесь к админу!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+				return;
+			}
+			if(this.current_user.get_type() == user_type.PAYMASTER){
+				this.work_frame.TabPages.Add(this.fuel_sale_tab);
+				fuel_sale_data = new Model_fuel_sale(ref fuel_sale_instruments, ref current_SqlConnection, current_user.get_id());
+				this.fuel_sale_container.Controls.Add(fuel_sale_data.trans_table);
+				return;
+			}
+		}
+
+		private void delete_tabs(){
+			if(this.current_user.get_type() == user_type.PAYMASTER){
+				this.fuel_sale_container.Controls.RemoveByKey(fuel_sale_data.trans_table.Name);
+				fuel_sale_data = null;
+				this.work_frame.TabPages.RemoveByKey(this.fuel_sale_tab.Name);
+				return;
+			}
 		}
 
 		//производит соединение с БД, выбирает его текущим, запускает триггер after_success_connect

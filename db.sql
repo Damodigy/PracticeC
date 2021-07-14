@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Июл 14 2021 г., 13:46
+-- Время создания: Июл 15 2021 г., 01:32
 -- Версия сервера: 5.7.15
 -- Версия PHP: 7.0.10
 
@@ -33,6 +33,16 @@ CREATE TABLE `containers` (
   `fuel_id` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Дамп данных таблицы `containers`
+--
+
+INSERT INTO `containers` (`id`, `container_volume`, `fuel_volume`, `fuel_id`) VALUES
+(1, 65000, 60000, 1),
+(2, 65000, 60000, 2),
+(3, 65000, 0, 1),
+(4, 65000, 0, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -40,6 +50,7 @@ CREATE TABLE `containers` (
 --
 
 CREATE TABLE `fuel_transactions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `responsible_for` bigint(20) UNSIGNED NOT NULL COMMENT 'Ответственный за транзакциюпринимающий топливо для заливки в бак,кассир, совершающий продажу',
   `time_start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время начала заливки/продажи',
   `time_end` timestamp NULL DEFAULT NULL COMMENT 'Время конца заливки/продажи',
@@ -49,6 +60,14 @@ CREATE TABLE `fuel_transactions` (
   `fuel_volume` bigint(20) NOT NULL COMMENT 'литры\nположительно, если происходит заливка в контейнер\nотрицателно, если продажа',
   `cost` bigint(20) NOT NULL COMMENT 'копейки\nцена транзакции\nотрицателно, если происходит заливка в контейнер\nположительно, если продажа'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `fuel_transactions`
+--
+
+INSERT INTO `fuel_transactions` (`id`, `responsible_for`, `time_start`, `time_end`, `fuel_id`, `container_id`, `pump_id`, `fuel_volume`, `cost`) VALUES
+(1, 1, '2021-07-14 17:32:27', NULL, 1, 1, 1, -20, 80000),
+(2, 1, '2021-07-14 17:33:44', '2021-07-14 17:36:00', 2, 2, 1, -30, 123000);
 
 -- --------------------------------------------------------
 
@@ -64,6 +83,14 @@ CREATE TABLE `fuel_types` (
   `cost_sale` int(10) UNSIGNED NOT NULL COMMENT 'Цена продажи юзеру, коп/л',
   `data` longtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `fuel_types`
+--
+
+INSERT INTO `fuel_types` (`id`, `type`, `vendor`, `cost_buy`, `cost_sale`, `data`) VALUES
+(1, 'АИ-92', 'РОСНЕФТЬ', 3000, 4000, ''),
+(2, 'АИ-95', 'РОСНЕФТЬ', 3100, 4100, '');
 
 -- --------------------------------------------------------
 
@@ -82,6 +109,16 @@ CREATE TABLE `pumps` (
   `tap_6` tinyint(3) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Дамп данных таблицы `pumps`
+--
+
+INSERT INTO `pumps` (`id`, `status`, `tap_1`, `tap_2`, `tap_3`, `tap_4`, `tap_5`, `tap_6`) VALUES
+(1, 1, 1, 2, 3, 1, 2, 3),
+(2, 1, 1, 2, 3, 1, 2, 3),
+(3, 1, 1, 4, NULL, 1, 4, NULL),
+(4, 1, 3, 4, NULL, 3, 4, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -93,6 +130,13 @@ CREATE TABLE `shifts` (
   `time_start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_end` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `shifts`
+--
+
+INSERT INTO `shifts` (`id`, `time_start`, `time_end`) VALUES
+(1, '2021-07-14 15:29:35', '2023-07-13 17:00:00');
 
 -- --------------------------------------------------------
 
@@ -107,6 +151,13 @@ CREATE TABLE `slaves` (
   `pay_per_shift` int(10) UNSIGNED NOT NULL COMMENT 'З/П за смену (руб)',
   `rank` tinytext NOT NULL COMMENT 'Должность'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `slaves`
+--
+
+INSERT INTO `slaves` (`id`, `fio`, `date_employ`, `pay_per_shift`, `rank`) VALUES
+(1, 'Оля', '2021-07-14 11:05:13', 1000, 'Продован');
 
 -- --------------------------------------------------------
 
@@ -133,6 +184,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`id`, `login`, `slave_id`, `type`) VALUES
+(1, 'prodovan', 1, 3);
+
+--
 -- Индексы сохранённых таблиц
 --
 
@@ -147,6 +205,7 @@ ALTER TABLE `containers`
 -- Индексы таблицы `fuel_transactions`
 --
 ALTER TABLE `fuel_transactions`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `slaves_idx` (`responsible_for`),
   ADD KEY `fuel_types_idx` (`fuel_id`),
   ADD KEY `containers_idx` (`container_id`),
@@ -205,32 +264,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `containers`
 --
 ALTER TABLE `containers`
-  MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT для таблицы `fuel_transactions`
+--
+ALTER TABLE `fuel_transactions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT для таблицы `fuel_types`
 --
 ALTER TABLE `fuel_types`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT для таблицы `pumps`
 --
 ALTER TABLE `pumps`
-  MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT для таблицы `shifts`
 --
 ALTER TABLE `shifts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT для таблицы `slaves`
 --
 ALTER TABLE `slaves`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
