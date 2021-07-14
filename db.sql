@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Июл 04 2021 г., 13:53
+-- Время создания: Июл 14 2021 г., 13:46
 -- Версия сервера: 5.7.15
 -- Версия PHP: 7.0.10
 
@@ -40,7 +40,6 @@ CREATE TABLE `containers` (
 --
 
 CREATE TABLE `fuel_transactions` (
-  `shift_id` bigint(20) UNSIGNED NOT NULL,
   `responsible_for` bigint(20) UNSIGNED NOT NULL COMMENT 'Ответственный за транзакциюпринимающий топливо для заливки в бак,кассир, совершающий продажу',
   `time_start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время начала заливки/продажи',
   `time_end` timestamp NULL DEFAULT NULL COMMENT 'Время конца заливки/продажи',
@@ -120,6 +119,19 @@ CREATE TABLE `slaves_shifts` (
   `shift_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `login` tinytext NOT NULL,
+  `slave_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `type` tinyint(4) NOT NULL COMMENT '0-гость, нихрена не может|1-может всё, также управлять пользователями|2-может управлять сменами, смотреть статистику|3-может продавать бензыч|4-может управлять баками и колонками, принимать бензыч'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Индексы сохранённых таблиц
 --
@@ -136,7 +148,6 @@ ALTER TABLE `containers`
 --
 ALTER TABLE `fuel_transactions`
   ADD KEY `slaves_idx` (`responsible_for`),
-  ADD KEY `shifts_idx` (`shift_id`),
   ADD KEY `fuel_types_idx` (`fuel_id`),
   ADD KEY `containers_idx` (`container_id`),
   ADD KEY `pumps_idx` (`pump_id`);
@@ -180,6 +191,13 @@ ALTER TABLE `slaves_shifts`
   ADD KEY `shifts_idx` (`shift_id`) USING BTREE;
 
 --
+-- Индексы таблицы `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `slaves_idx` (`slave_id`);
+
+--
 -- AUTO_INCREMENT для сохранённых таблиц
 --
 
@@ -209,6 +227,11 @@ ALTER TABLE `shifts`
 ALTER TABLE `slaves`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT для таблицы `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
 -- Ограничения внешнего ключа сохраненных таблиц
 --
 
@@ -225,7 +248,6 @@ ALTER TABLE `fuel_transactions`
   ADD CONSTRAINT `trans_containers_key` FOREIGN KEY (`container_id`) REFERENCES `containers` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `trans_fuel_types_key` FOREIGN KEY (`fuel_id`) REFERENCES `fuel_types` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `trans_pumps_key` FOREIGN KEY (`pump_id`) REFERENCES `pumps` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `trans_shifts_key` FOREIGN KEY (`shift_id`) REFERENCES `shifts` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `trans_slaves_key` FOREIGN KEY (`responsible_for`) REFERENCES `slaves` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
@@ -245,6 +267,12 @@ ALTER TABLE `pumps`
 ALTER TABLE `slaves_shifts`
   ADD CONSTRAINT `shift_key` FOREIGN KEY (`shift_id`) REFERENCES `shifts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `slave_key` FOREIGN KEY (`slave_id`) REFERENCES `slaves` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `user_slave_key` FOREIGN KEY (`slave_id`) REFERENCES `slaves` (`id`) ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
