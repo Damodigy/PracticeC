@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Июл 15 2021 г., 01:32
+-- Время создания: Июл 15 2021 г., 15:10
 -- Версия сервера: 5.7.15
 -- Версия PHP: 7.0.10
 
@@ -40,7 +40,7 @@ CREATE TABLE `containers` (
 INSERT INTO `containers` (`id`, `container_volume`, `fuel_volume`, `fuel_id`) VALUES
 (1, 65000, 60000, 1),
 (2, 65000, 60000, 2),
-(3, 65000, 0, 1),
+(3, 65000, 40000, 3),
 (4, 65000, 0, NULL);
 
 -- --------------------------------------------------------
@@ -90,7 +90,8 @@ CREATE TABLE `fuel_types` (
 
 INSERT INTO `fuel_types` (`id`, `type`, `vendor`, `cost_buy`, `cost_sale`, `data`) VALUES
 (1, 'АИ-92', 'РОСНЕФТЬ', 3000, 4000, ''),
-(2, 'АИ-95', 'РОСНЕФТЬ', 3100, 4100, '');
+(2, 'АИ-95', 'РОСНЕФТЬ', 3100, 4100, ''),
+(3, 'ДТ', 'РОСНЕФТЬ', 1005, 2156, '');
 
 -- --------------------------------------------------------
 
@@ -274,7 +275,7 @@ ALTER TABLE `fuel_transactions`
 -- AUTO_INCREMENT для таблицы `fuel_types`
 --
 ALTER TABLE `fuel_types`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT для таблицы `pumps`
 --

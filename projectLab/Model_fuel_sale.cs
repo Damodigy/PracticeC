@@ -57,9 +57,10 @@ namespace projectLab {
 		private string order_by;
 
 		UInt64 slave_id;
-		List<container> containers;
-		List<fuel> fuels;
+		Dictionary<UInt16, container> containers;
+		Dictionary<UInt64, fuel> fuels;
 		List<pump> pumps;
+		Dictionary<Int32, view_data> data_not_exec_strings;
 		
 		//private Dictionary<int, string> departaments;
 		//private List<int> departs_id;
@@ -77,9 +78,10 @@ namespace projectLab {
 			connect = current_connect;
 
 			this.slave_id = slave_id;
-			this.containers = new List<container>();
-			this.fuels = new List<fuel>();
+			this.containers = new Dictionary<UInt16,container>();
+			this.fuels = new Dictionary<UInt64,fuel>();
 			this.pumps = new List<pump>();
+			this.data_not_exec_strings = new Dictionary<Int32,view_data>();
 			
 			create_head_table();
 			
@@ -302,7 +304,7 @@ namespace projectLab {
 				col_volume_need[i].Name = "col_volume_need_"+i;
 				col_volume_need[i].Text = data[i].volume;
 				col_volume_need[i].ReadOnly = true;
-				col_volume_need[i].Size = new System.Drawing.Size(44, 13);
+				col_volume_need[i].Size = new System.Drawing.Size(50, 13);
 				col_volume_need[i].TabIndex = i*7 + 3;
 				trans_table.Controls.Add(col_volume_need[i], 2, i+1);
 				// 
@@ -316,7 +318,7 @@ namespace projectLab {
 				col_res_cost[i].Name = "col_res_cost_"+i;
 				col_res_cost[i].Text = data[i].cost;
 				col_res_cost[i].ReadOnly = true;
-				col_res_cost[i].Size = new System.Drawing.Size(44, 13);
+				col_res_cost[i].Size = new System.Drawing.Size(80, 13);
 				col_res_cost[i].TabIndex = i*7 + 4;
 				trans_table.Controls.Add(col_res_cost[i], 3, i+1);
 				// 
@@ -330,7 +332,7 @@ namespace projectLab {
 				col_time_start[i].Name = "col_time_start_"+i;
 				col_time_start[i].Text = data[i].time_start;
 				col_time_start[i].ReadOnly = true;
-				col_time_start[i].Size = new System.Drawing.Size(44, 13);
+				col_time_start[i].Size = new System.Drawing.Size(70, 13);
 				col_time_start[i].TabIndex = i*7 + 5;
 				trans_table.Controls.Add(col_time_start[i], 4, i+1);
 				// 
@@ -344,7 +346,7 @@ namespace projectLab {
 				col_time_end[i].Name = "col_time_end_"+i;
 				col_time_end[i].Text = data[i].time_end;
 				col_time_end[i].ReadOnly = true;
-				col_time_end[i].Size = new System.Drawing.Size(44, 13);
+				col_time_end[i].Size = new System.Drawing.Size(70, 13);
 				col_time_end[i].TabIndex = i*7 + 6;
 				trans_table.Controls.Add(col_time_end[i], 5, i+1);
 				// 
@@ -357,10 +359,13 @@ namespace projectLab {
 				col_but_exec[i].Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
 				col_but_exec[i].Location = new System.Drawing.Point(548, 32);
 				col_but_exec[i].Name = "col_but_exec_"+i;
+				this.data_not_exec_strings[i] = data[i];
 				col_but_exec[i].Size = new System.Drawing.Size(26, 24);
 				col_but_exec[i].TabIndex = i*7 + 7;
 				if(data[i].time_end != ""){
 					col_but_exec[i].Enabled = false;
+				}else{
+
 				}
 				col_but_exec[i].Text = "<";
 				col_but_exec[i].UseVisualStyleBackColor = true;
@@ -369,10 +374,6 @@ namespace projectLab {
 			}
 			trans_table.ResumeLayout(false);
 			trans_table.PerformLayout();
-		}
-
-		private void execute_trans(object sender,EventArgs e) {
-			
 		}
 
 		/*
@@ -451,6 +452,7 @@ namespace projectLab {
 			this.containers.Clear();
 			this.fuels.Clear();
 			this.pumps.Clear();
+			this.data_not_exec_strings.Clear();
 
 
 			//получим список контейнеров
@@ -468,7 +470,7 @@ namespace projectLab {
 				tmp.volume = Convert.ToUInt64(result.GetValue(1));
 				tmp.fuel_id = Convert.IsDBNull(result.GetValue(2)) ? 0 : Convert.ToUInt32(result.GetValue(2));
 				fuels_id.Add(tmp.fuel_id);
-				containers.Add(tmp);
+				containers[tmp.id] = tmp;
 			}
 			result.Close();
 
@@ -491,7 +493,7 @@ namespace projectLab {
 				tmp.id = Convert.ToUInt16(result.GetValue(0));
 				tmp.name = Convert.ToString(result.GetValue(1));
 				tmp.cost = Convert.ToUInt32(result.GetValue(2));
-				fuels.Add(tmp);
+				fuels[tmp.id] = tmp;
 			}
 			result.Close();
 
@@ -596,87 +598,252 @@ namespace projectLab {
 ///////////////////////////////////////////////////////////////////////////////
 
 		private void new_str(Object sender, EventArgs e){
-			/*
+			//TODO тест на заливку топлива
 			int ind = trans_table.RowCount-1;
 			trans_table.SuspendLayout();
 			trans_table.RowCount += 1;
+
+			view_data tmp = new view_data();
+
 			// 
-			// inp_id
+			// cb_pump
 			// 
-			col_id.Add(new TextBox());
-			col_id[ind].Anchor = System.Windows.Forms.AnchorStyles.None;
-			col_id[ind].BackColor = System.Drawing.SystemColors.Control;
-			col_id[ind].BorderStyle = System.Windows.Forms.BorderStyle.None;
-			col_id[ind].Location = new System.Drawing.Point(5, 37);
-			col_id[ind].MaxLength = 20;
-			col_id[ind].Name = "inp_id_"+(ind+1);
-			col_id[ind].Text = "*";
-			col_id[ind].ReadOnly = true;
-			col_id[ind].Size = new System.Drawing.Size(44, 13);
-			col_id[ind].TabStop = false;
-			trans_table.Controls.Add(col_id[ind], 0, ind+1);
+			col_pump.Add(new ComboBox());
+			col_pump[ind].Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			col_pump[ind].FormattingEnabled = true;
+			col_pump[ind].Location = new System.Drawing.Point(203, 33);
+			//col_pump[i].MaxDropDownItems = 50;
+			col_pump[ind].Name = "col_pump_"+ind;
+			col_pump[ind].Items.Add("---");
+			for(Int32 i=0; i<pumps.Count; i++){
+				col_pump[ind].Items.Add(pumps[i].id);
+			}
+			col_pump[ind].SelectedIndex = 0;
+			col_pump[ind].SelectedIndexChanged += change_pump;
+			col_pump[ind].DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			col_pump[ind].Size = new System.Drawing.Size(138, 21);
+			col_pump[ind].TabIndex = ind*7 + 1;
+			trans_table.Controls.Add(col_pump[ind], 0, ind+1);
+			tmp.pump_id = "0";
 			// 
-			// inp_name
+			// cb_tap
 			// 
-			col_name.Add(new TextBox());
-			col_name[ind].Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-			col_name[ind].Location = new System.Drawing.Point(57, 34);
-			col_name[ind].MaxLength = 500;
-			col_name[ind].Name = "inp_name_"+(ind+1);
-			col_name[ind].Size = new System.Drawing.Size(138, 20);
-			col_name[ind].TabIndex = (ind+1)*4;
-			col_name[ind].TextChanged += set_unsave;
-			trans_table.Controls.Add(col_name[ind], 1, (ind+1));
+			col_fuel.Add(new ComboBox());
+			col_fuel[ind].Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			col_fuel[ind].FormattingEnabled = true;
+			col_fuel[ind].Location = new System.Drawing.Point(203, 33);
+			//col_fuel[i].MaxDropDownItems = 50;
+			col_fuel[ind].Name = "col_fuel_"+ind;
+			col_fuel[ind].Items.Add("---");
+			col_fuel[ind].SelectedIndex = 0;
+			col_fuel[ind].Enabled = false;
+			col_fuel[ind].SelectedIndexChanged += change_tap;
+			col_fuel[ind].DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			col_fuel[ind].Size = new System.Drawing.Size(138, 21);
+			col_fuel[ind].TabIndex = ind*7 + 2;
+			trans_table.Controls.Add(col_fuel[ind], 1, ind+1);
+			tmp.fuel_type = "0";
 			// 
-			// inp_departament
+			// inp_volume
 			// 
-			col_departament.Add(new ComboBox());
-			col_departament[ind].Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-			col_departament[ind].FormattingEnabled = true;
-			col_departament[ind].Location = new System.Drawing.Point(203, 33);
-			//col_departament[ind].MaxDropDownItems = 50;
-			col_departament[ind].Name = "col_departament_"+(ind+1);
-			col_departament[ind].DisplayMember = "Value";
-			col_departament[ind].ValueMember = "Key";
-			col_departament[ind].DataSource = new BindingSource(departaments, null);
-			col_departament[ind].DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			col_departament[ind].Size = new System.Drawing.Size(138, 21);
-			col_departament[ind].TabIndex = (ind+1)*4 + 1;
-			col_departament[ind].DropDownClosed += combobox_change;
-			trans_table.Controls.Add(col_departament[ind], 2, (ind+1));
+			col_volume_need.Add(new TextBox());
+			col_volume_need[ind].Anchor = System.Windows.Forms.AnchorStyles.None;
+			//col_volume_need[ind].BackColor = System.Drawing.SystemColors.Control;
+			//col_volume_need[ind].BorderStyle = System.Windows.Forms.BorderStyle.None;
+			col_volume_need[ind].Location = new System.Drawing.Point(5, 37);
+			col_volume_need[ind].Name = "col_volume_need_"+ind;
+			col_volume_need[ind].Text = "";
+			col_volume_need[ind].TextChanged += validator.validate_absint_TextBox;
+			col_volume_need[ind].TextChanged += change_cost;
+			col_volume_need[ind].Size = new System.Drawing.Size(50, 13);
+			col_volume_need[ind].TabIndex = ind*7 + 3;
+			trans_table.Controls.Add(col_volume_need[ind], 2, ind+1);
+			tmp.volume = "0";
 			// 
-			// inp_data
+			// inp_cost
 			// 
-			col_data.Add(new TextBox());
-			col_data[ind].BorderStyle = System.Windows.Forms.BorderStyle.None;
-			col_data[ind].Dock = System.Windows.Forms.DockStyle.Fill;
-			col_data[ind].Location = new System.Drawing.Point(349, 27);
-			col_data[ind].Multiline = true;
-			col_data[ind].Name = "inp_data_"+(ind+1);
-			//this.inp_data.Size = new System.Drawing.Size(186, 34);
-			col_data[ind].TabIndex = (ind+1)*4 + 2;
-			col_data[ind].WordWrap = false;
-			col_data[ind].TextChanged += set_unsave;
-			trans_table.Controls.Add(col_data[ind], 3, (ind+1));
+			col_res_cost.Add(new TextBox());
+			col_res_cost[ind].Anchor = System.Windows.Forms.AnchorStyles.None;
+			col_res_cost[ind].BackColor = System.Drawing.SystemColors.Control;
+			col_res_cost[ind].BorderStyle = System.Windows.Forms.BorderStyle.None;
+			col_res_cost[ind].Location = new System.Drawing.Point(5, 37);
+			col_res_cost[ind].Name = "col_res_cost_"+ind;
+			col_res_cost[ind].Text = "0/0";
+			col_res_cost[ind].ReadOnly = true;
+			col_res_cost[ind].Size = new System.Drawing.Size(80, 13);
+			col_res_cost[ind].TabIndex = ind*7 + 4;
+			trans_table.Controls.Add(col_res_cost[ind], 3, ind+1);
+			tmp.cost = "0";
 			// 
-			// but_del
+			//  inp_time_start
 			// 
-			col_but_del.Add(new Button());
-			col_but_del[ind].Anchor = System.Windows.Forms.AnchorStyles.None;
-			col_but_del[ind].Cursor = System.Windows.Forms.Cursors.Hand;
-			col_but_del[ind].FlatStyle = System.Windows.Forms.FlatStyle.System;
-			col_but_del[ind].Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-			col_but_del[ind].Location = new System.Drawing.Point(548, 32);
-			col_but_del[ind].Name = "but_del_"+(ind+1);
-			col_but_del[ind].Size = new System.Drawing.Size(26, 24);
-			col_but_del[ind].TabIndex = (ind+1)*4 + 3;
-			col_but_del[ind].Text = "r";
-			col_but_del[ind].UseVisualStyleBackColor = true;
-			col_but_del[ind].Click += del_str;
-			trans_table.Controls.Add(col_but_del[ind], 4, (ind+1));
+			col_time_start.Add(new TextBox());
+			col_time_start[ind].Anchor = System.Windows.Forms.AnchorStyles.None;
+			col_time_start[ind].BackColor = System.Drawing.SystemColors.Control;
+			col_time_start[ind].BorderStyle = System.Windows.Forms.BorderStyle.None;
+			col_time_start[ind].Location = new System.Drawing.Point(5, 37);
+			col_time_start[ind].Name = "col_time_start_"+ind;
+			col_time_start[ind].Text = "";
+			col_time_start[ind].ReadOnly = true;
+			col_time_start[ind].Size = new System.Drawing.Size(70, 13);
+			col_time_start[ind].TabIndex = ind*7 + 5;
+			trans_table.Controls.Add(col_time_start[ind], 4, ind+1);
+			tmp.time_start = "";
+			// 
+			//  inp_time_end
+			// 
+			col_time_end.Add(new TextBox());
+			col_time_end[ind].Anchor = System.Windows.Forms.AnchorStyles.None;
+			col_time_end[ind].BackColor = System.Drawing.SystemColors.Control;
+			col_time_end[ind].BorderStyle = System.Windows.Forms.BorderStyle.None;
+			col_time_end[ind].Location = new System.Drawing.Point(5, 37);
+			col_time_end[ind].Name = "col_time_end_"+ind;
+			col_time_end[ind].Text = "";
+			col_time_end[ind].ReadOnly = true;
+			col_time_end[ind].Size = new System.Drawing.Size(70, 13);
+			col_time_end[ind].TabIndex = ind*7 + 6;
+			trans_table.Controls.Add(col_time_end[ind], 5, ind+1);
+			tmp.time_end = "";
+			// 
+			// but_exec
+			// 
+			col_but_exec.Add(new Button());
+			col_but_exec[ind].Anchor = System.Windows.Forms.AnchorStyles.None;
+			col_but_exec[ind].Cursor = System.Windows.Forms.Cursors.Hand;
+			col_but_exec[ind].FlatStyle = System.Windows.Forms.FlatStyle.System;
+			col_but_exec[ind].Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+			col_but_exec[ind].Location = new System.Drawing.Point(548, 32);
+			col_but_exec[ind].Name = "col_but_exec_"+ind;
+			col_but_exec[ind].Size = new System.Drawing.Size(26, 24);
+			col_but_exec[ind].TabIndex = ind*7 + 7;
+			col_but_exec[ind].Enabled = false;
+			col_but_exec[ind].Text = "4";
+			col_but_exec[ind].UseVisualStyleBackColor = true;
+			col_but_exec[ind].Click += execute_trans;
+			trans_table.Controls.Add(col_but_exec[ind], 6, ind+1);
+			tmp.id = "0";
+
+			data_not_exec_strings[ind] = tmp;
+
 			trans_table.ResumeLayout(false);
 			trans_table.PerformLayout();
-			 */
+			
+		}
+
+		private void change_pump(object sender,EventArgs e) {
+			ComboBox curr_cb = (ComboBox)sender;
+			Int32 ind = (Int32)validator.extract_uint_from_end(curr_cb.Name);
+			col_fuel[ind].Items.Clear();
+			col_fuel[ind].Items.Add("---");
+			col_fuel[ind].SelectedIndex = 0;
+			col_fuel[ind].Enabled = false;
+			col_res_cost[ind].Text = "0/0";
+			col_but_exec[ind].Enabled = false;
+			if(curr_cb.SelectedIndex != 0){
+				Int32 pump_ind = curr_cb.SelectedIndex-1;
+				//data_not_exec_strings[ind].pump_id = pump_ind.ToString();
+				UInt64 fuel_id;
+
+				for(Int16 i=1; i<=6; i++){
+					UInt16 cont_id = 0;
+					switch(i){
+						case 1:
+							cont_id = pumps[pump_ind].tap_1;
+							break;
+						case 2:
+							cont_id = pumps[pump_ind].tap_2;
+							break;
+						case 3:
+							cont_id = pumps[pump_ind].tap_3;
+							break;
+						case 4:
+							cont_id = pumps[pump_ind].tap_4;
+							break;
+						case 5:
+							cont_id = pumps[pump_ind].tap_5;
+							break;
+						case 6:
+							cont_id = pumps[pump_ind].tap_6;
+							break;
+					}
+
+					if(cont_id != 0){
+						fuel_id = containers[cont_id].fuel_id;
+						if(fuel_id != 0){
+							col_fuel[ind].Items.Add("Пист."+i+" ["+fuels[fuel_id].name+"("+fuels[fuel_id].id+")]");
+						}else{
+							col_fuel[ind].Items.Add("Пист."+i+" [откл]");
+						}
+					}else{
+						col_fuel[ind].Items.Add("Пист."+i+" [откл]");
+					}
+				}
+
+				col_fuel[ind].Enabled = true;
+			}
+		}
+
+		private void change_tap(object sender,EventArgs e) {
+			ComboBox curr_cb = (ComboBox)sender;
+			Int32 ind = (Int32)validator.extract_uint_from_end(curr_cb.Name);
+
+			if(curr_cb.SelectedIndex != 0){
+				Int32 pump_ind = col_pump[ind].SelectedIndex-1;
+				UInt16 cont_id = 0;
+				switch(curr_cb.SelectedIndex){
+					case 1:
+						cont_id = pumps[pump_ind].tap_1;
+						break;
+					case 2:
+						cont_id = pumps[pump_ind].tap_2;
+						break;
+					case 3:
+						cont_id = pumps[pump_ind].tap_3;
+						break;
+					case 4:
+						cont_id = pumps[pump_ind].tap_4;
+						break;
+					case 5:
+						cont_id = pumps[pump_ind].tap_5;
+						break;
+					case 6:
+						cont_id = pumps[pump_ind].tap_6;
+						break;
+				}
+				if(cont_id != 0){
+					UInt64 fuel_id = containers[cont_id].fuel_id;
+					if(fuel_id != 0){
+						Double cost = (double)fuels[fuel_id].cost/100.0;
+						Double vol = validator.extract_uint_from_start(col_volume_need[ind].Text);
+						data_not_exec_strings[ind].cost = fuels[fuel_id].cost.ToString();
+						col_res_cost[ind].Text = cost + "/" + (cost*vol);
+						col_but_exec[ind].Enabled = true;
+					}else{
+						data_not_exec_strings[ind].cost = "0";
+						col_res_cost[ind].Text = "0/0";
+						col_but_exec[ind].Enabled = false;
+					}
+				}else{
+					data_not_exec_strings[ind].cost = "0";
+					col_res_cost[ind].Text = "0/0";
+					col_but_exec[ind].Enabled = false;
+				}
+			}else{
+				data_not_exec_strings[ind].cost = "0";
+				col_res_cost[ind].Text = "0/0";
+				col_but_exec[ind].Enabled = false;
+			}
+		}
+
+		private void change_cost(object sender,EventArgs e){
+			Int32 ind = (Int32)validator.extract_uint_from_end(((TextBox)sender).Name);
+			Double cost = Convert.ToDouble(data_not_exec_strings[ind].cost)/100.0;
+			Double vol = validator.extract_uint_from_start(col_volume_need[ind].Text);
+			col_res_cost[ind].Text = cost + "/" + (cost*vol);
+		}
+
+		private void execute_trans(object sender,EventArgs e) {
+			//TODO
 		}
 
 		private void reload_data_with_save(Object sender, EventArgs e){
