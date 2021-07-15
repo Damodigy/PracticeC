@@ -359,13 +359,12 @@ namespace projectLab {
 				col_but_exec[i].Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
 				col_but_exec[i].Location = new System.Drawing.Point(548, 32);
 				col_but_exec[i].Name = "col_but_exec_"+i;
-				this.data_not_exec_strings[i] = data[i];
 				col_but_exec[i].Size = new System.Drawing.Size(26, 24);
 				col_but_exec[i].TabIndex = i*7 + 7;
 				if(data[i].time_end != ""){
 					col_but_exec[i].Enabled = false;
 				}else{
-
+					this.data_not_exec_strings[i] = data[i];
 				}
 				col_but_exec[i].Text = "<";
 				col_but_exec[i].UseVisualStyleBackColor = true;
@@ -375,16 +374,6 @@ namespace projectLab {
 			trans_table.ResumeLayout(false);
 			trans_table.PerformLayout();
 		}
-
-		/*
-		private void solvers_table_Paint(object sender, PaintEventArgs e) {
-			for(int i=0; i<col_departament.Count; i++){
-				col_departament[i].SelectedValue = departs_id[i];
-			}
-
-			trans_table.Paint -= solvers_table_Paint;
-		}
-		 * */
 
 		//перезагружает данные в таблицу
 		private void reload_data(){
@@ -730,7 +719,7 @@ namespace projectLab {
 			
 		}
 
-		private void change_pump(object sender,EventArgs e) {
+		private void change_pump(object sender,EventArgs e){
 			ComboBox curr_cb = (ComboBox)sender;
 			Int32 ind = (Int32)validator.extract_uint_from_end(curr_cb.Name);
 			col_fuel[ind].Items.Clear();
@@ -783,7 +772,7 @@ namespace projectLab {
 			}
 		}
 
-		private void change_tap(object sender,EventArgs e) {
+		private void change_tap(object sender,EventArgs e){
 			ComboBox curr_cb = (ComboBox)sender;
 			Int32 ind = (Int32)validator.extract_uint_from_end(curr_cb.Name);
 
@@ -842,8 +831,245 @@ namespace projectLab {
 			col_res_cost[ind].Text = cost + "/" + (cost*vol);
 		}
 
-		private void execute_trans(object sender,EventArgs e) {
-			//TODO
+		private void execute_trans(object sender,EventArgs e){
+			Button curr_but = (Button)sender;
+			curr_but.Enabled = false;
+			Int32 ind = (Int32)validator.extract_uint_from_end(curr_but.Name);
+			if(data_not_exec_strings[ind].id == "0"){
+				//запуск транзакции
+
+
+				Int32 pump_ind = col_pump[ind].SelectedIndex-1;
+				UInt16 pump_id = 0;
+				UInt16 cont_id = 0;
+				UInt64 fuel_id = 0;
+				if(pump_ind < 0){
+					MessageBox.Show("Не выбрана колонка", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+				pump_id = pumps[pump_ind].id;
+				switch(col_fuel[ind].SelectedIndex){
+					case 1:
+						cont_id = pumps[pump_ind].tap_1;
+						break;
+					case 2:
+						cont_id = pumps[pump_ind].tap_2;
+						break;
+					case 3:
+						cont_id = pumps[pump_ind].tap_3;
+						break;
+					case 4:
+						cont_id = pumps[pump_ind].tap_4;
+						break;
+					case 5:
+						cont_id = pumps[pump_ind].tap_5;
+						break;
+					case 6:
+						cont_id = pumps[pump_ind].tap_6;
+						break;
+				}
+				if(cont_id != 0){
+					fuel_id = containers[cont_id].fuel_id;
+					if(fuel_id == 0){
+						MessageBox.Show("Контейнер пуст!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+						curr_but.Enabled = true;
+						return;
+					}
+				}else{
+					MessageBox.Show("Не выбран пистолет", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+
+				Int64 volume_need = validator.extract_uint_from_start(col_volume_need[ind].Text);
+				if(0 >= volume_need){
+					MessageBox.Show("Указан нулевой объем", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+
+				MySqlDataReader result = null;
+				//заблочим таблицы `fuel_transactions`, `containers`, `fuel_types`
+				MySqlCommand query = new MySqlCommand("LOCK TABLES `fuel_transactions` WRITE, `containers` WRITE, `fuel_types` READ", connect);
+				try{
+					query.ExecuteNonQuery();
+				}catch(Exception ex){
+					MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+
+				Int64 volume_exist = 0;
+
+				//Получим остаток топлива в контейнере
+				query.CommandText = "SELECT `fuel_volume` FROM `containers` WHERE `id` = @cont_id";
+				query.Parameters.AddWithValue("@cont_id", cont_id);
+				try{
+					volume_exist = Convert.ToInt64(query.ExecuteScalar());
+				}catch(Exception ex){
+					MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+
+				//топлива в контейнере меньше чем нужно
+				if(volume_exist < volume_need){
+					MessageBox.Show("Не хватает топлива: "+volume_exist+" л./"+volume_need+" л. (есть/нужно)", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					query = new MySqlCommand("UNLOCK TABLES", connect);
+					try{
+						query.ExecuteNonQuery();
+					}catch(Exception ex){
+						MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+						curr_but.Enabled = true;
+						return;
+					}
+					curr_but.Enabled = true;
+					return;
+				}
+
+				MySqlTransaction transaction = connect.BeginTransaction();
+				//обновим количество топлива в контейнере
+				MySqlCommand update_cont = new MySqlCommand("UPDATE `containers` SET `fuel_volume` = `fuel_volume` - @volume_need WHERE `id` = @cont_id", connect);
+				update_cont.Parameters.AddWithValue("@cont_id", cont_id);
+				update_cont.Parameters.AddWithValue("@volume_need", volume_need);
+				update_cont.Transaction = transaction;
+				update_cont.CommandTimeout = 30;
+
+				//запишем транзакцию
+				MySqlCommand insert_trans = new MySqlCommand(
+					"INSERT INTO `fuel_transactions` (`responsible_for`, `fuel_id`, `container_id`, `pump_id`, `fuel_volume`, `cost`) VALUES (@slave_id, @fuel_id, @cont_id, @pump_id, -(@volume), (SELECT @volume * `cost_sale` FROM `fuel_types` WHERE `id` = @fuel_id))",
+					connect
+				);
+				insert_trans.Parameters.AddWithValue("@slave_id", slave_id);
+				insert_trans.Parameters.AddWithValue("@fuel_id", fuel_id);
+				insert_trans.Parameters.AddWithValue("@cont_id", cont_id);
+				insert_trans.Parameters.AddWithValue("@pump_id", pump_id);
+				insert_trans.Parameters.AddWithValue("@volume", volume_need);
+				insert_trans.Transaction = transaction;
+				insert_trans.CommandTimeout = 120;
+
+				//получим id вставки
+				MySqlCommand get_insert_ind = new MySqlCommand("SELECT LAST_INSERT_ID()", connect);
+				get_insert_ind.Transaction = transaction;
+				get_insert_ind.CommandTimeout = 30;
+
+				UInt64 inserted_id = 0;
+
+				col_pump[ind].Enabled = false;
+				col_fuel[ind].Enabled = false;
+				col_volume_need[ind].ReadOnly = true;
+
+				try{
+					update_cont.ExecuteNonQuery();
+				}catch(Exception ex){
+					MessageBox.Show("Произошла ошибка, изменения откатились."+Environment.NewLine+ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					transaction.Rollback();
+					curr_but.Enabled = true;
+					return;
+				}
+				try{
+					insert_trans.ExecuteNonQuery();
+				}catch(Exception ex){
+					MessageBox.Show("Произошла ошибка, изменения откатились."+Environment.NewLine+ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					transaction.Rollback();
+					curr_but.Enabled = true;
+					return;
+				}
+				try{
+					inserted_id = Convert.ToUInt64(get_insert_ind.ExecuteScalar());
+				}catch(Exception ex){
+					MessageBox.Show("Произошла ошибка, изменения откатились."+Environment.NewLine+ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					transaction.Rollback();
+					curr_but.Enabled = true;
+					return;
+				}
+				try{
+					transaction.Commit();
+				}catch(Exception ex){
+					MessageBox.Show("Произошла ошибка, изменения откатились."+Environment.NewLine+ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					transaction.Rollback();
+					curr_but.Enabled = true;
+					return;
+				}
+
+				data_not_exec_strings[ind].id = inserted_id.ToString();
+				DateTime start;
+				//получим время старта транзакции
+				query = new MySqlCommand("SELECT `time_start` FROM `fuel_transactions` WHERE `id` = @ins_id", connect);
+				query.Parameters.AddWithValue("@ins_id", inserted_id);
+				try{
+					start = (DateTime)query.ExecuteScalar();
+				}catch(Exception ex){
+					MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+				col_time_start[ind].Text = start.ToString("HH:mm:ss");
+
+				//разблокируем таблицы
+				query = new MySqlCommand("UNLOCK TABLES", connect);
+				try{
+					query.ExecuteNonQuery();
+				}catch(Exception ex){
+					MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+				curr_but.Text = "<";
+				curr_but.Enabled = true;
+
+			}else{
+				//остановка транзакции
+
+				//заблочим таблицы `fuel_transactions`
+				MySqlCommand query = new MySqlCommand("LOCK TABLES `fuel_transactions` WRITE", connect);
+				try{
+					query.ExecuteNonQuery();
+				}catch(Exception ex){
+					MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+
+				//установим время конца транзакции
+				query.CommandText = "UPDATE `fuel_transactions` SET `time_end` = NOW() WHERE `id` = @trans_id";
+				query.Parameters.AddWithValue("@trans_id", data_not_exec_strings[ind].id);
+				try{
+					query.ExecuteNonQuery();
+				}catch(Exception ex){
+					MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+
+				curr_but.Enabled = false;
+
+				DateTime end;
+				//получим время конца транзакции
+				query.CommandText = "SELECT `time_end` FROM `fuel_transactions` WHERE `id` = @trans_id";
+				try{
+					end = (DateTime)query.ExecuteScalar();
+				}catch(Exception ex){
+					MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+				col_time_end[ind].Text = end.ToString("HH:mm:ss");
+
+
+				//разблокируем таблицы
+				query = new MySqlCommand("UNLOCK TABLES", connect);
+				try{
+					query.ExecuteNonQuery();
+				}catch(Exception ex){
+					MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+					curr_but.Enabled = true;
+					return;
+				}
+
+			}
+
 		}
 
 		private void reload_data_with_save(Object sender, EventArgs e){

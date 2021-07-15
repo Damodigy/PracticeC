@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Июл 15 2021 г., 15:10
+-- Время создания: Июл 15 2021 г., 22:12
 -- Версия сервера: 5.7.15
 -- Версия PHP: 7.0.10
 
@@ -40,7 +40,7 @@ CREATE TABLE `containers` (
 INSERT INTO `containers` (`id`, `container_volume`, `fuel_volume`, `fuel_id`) VALUES
 (1, 65000, 60000, 1),
 (2, 65000, 60000, 2),
-(3, 65000, 40000, 3),
+(3, 65000, 39941, 3),
 (4, 65000, 0, NULL);
 
 -- --------------------------------------------------------
@@ -66,8 +66,10 @@ CREATE TABLE `fuel_transactions` (
 --
 
 INSERT INTO `fuel_transactions` (`id`, `responsible_for`, `time_start`, `time_end`, `fuel_id`, `container_id`, `pump_id`, `fuel_volume`, `cost`) VALUES
-(1, 1, '2021-07-14 17:32:27', NULL, 1, 1, 1, -20, 80000),
-(2, 1, '2021-07-14 17:33:44', '2021-07-14 17:36:00', 2, 2, 1, -30, 123000);
+(1, 1, '2021-07-14 17:32:27', '2021-07-15 15:01:43', 1, 1, 1, -20, 80000),
+(2, 1, '2021-07-14 17:33:44', '2021-07-14 17:36:00', 2, 2, 1, -30, 123000),
+(4, 1, '2021-07-15 12:21:26', '2021-07-15 15:03:16', 3, 3, 2, -40, 86240),
+(5, 1, '2021-07-15 15:08:39', '2021-07-15 15:09:57', 3, 3, 4, -19, 40964);
 
 -- --------------------------------------------------------
 
@@ -270,7 +272,7 @@ ALTER TABLE `containers`
 -- AUTO_INCREMENT для таблицы `fuel_transactions`
 --
 ALTER TABLE `fuel_transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT для таблицы `fuel_types`
 --

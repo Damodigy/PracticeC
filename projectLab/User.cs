@@ -24,7 +24,7 @@ namespace projectLab {
 		MANAGER		= 2,//может управлять сменами, смотреть статистику
 		/*
 		 * GRANT SELECT ON `politeh_prac`.`users` TO 'prodovan'@'localhost';
-		 * GRANT SELECT ON `politeh_prac`.`containers` TO 'prodovan'@'localhost';
+		 * GRANT SELECT, UPDATE ON `politeh_prac`.`containers` TO 'prodovan'@'localhost';
 		 * GRANT SELECT ON `politeh_prac`.`pumps` TO 'prodovan'@'localhost';
 		 * GRANT SELECT ON `politeh_prac`.`fuel_types` TO 'prodovan'@'localhost';
 		 * GRANT SELECT, UPDATE, INSERT ON `politeh_prac`.`fuel_transactions` TO 'prodovan'@'localhost';
