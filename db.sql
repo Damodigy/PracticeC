@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Июл 15 2021 г., 22:12
+-- Время создания: Июл 16 2021 г., 23:46
 -- Версия сервера: 5.7.15
 -- Версия PHP: 7.0.10
 
@@ -39,8 +39,8 @@ CREATE TABLE `containers` (
 
 INSERT INTO `containers` (`id`, `container_volume`, `fuel_volume`, `fuel_id`) VALUES
 (1, 65000, 60000, 1),
-(2, 65000, 60000, 2),
-(3, 65000, 39941, 3),
+(2, 65000, 59983, 2),
+(3, 65000, 39911, 3),
 (4, 65000, 0, NULL);
 
 -- --------------------------------------------------------
@@ -69,7 +69,9 @@ INSERT INTO `fuel_transactions` (`id`, `responsible_for`, `time_start`, `time_en
 (1, 1, '2021-07-14 17:32:27', '2021-07-15 15:01:43', 1, 1, 1, -20, 80000),
 (2, 1, '2021-07-14 17:33:44', '2021-07-14 17:36:00', 2, 2, 1, -30, 123000),
 (4, 1, '2021-07-15 12:21:26', '2021-07-15 15:03:16', 3, 3, 2, -40, 86240),
-(5, 1, '2021-07-15 15:08:39', '2021-07-15 15:09:57', 3, 3, 4, -19, 40964);
+(5, 1, '2021-07-15 15:08:39', '2021-07-15 15:09:57', 3, 3, 4, -19, 40964),
+(6, 1, '2021-07-15 15:31:57', '2021-07-15 15:32:15', 2, 2, 1, -17, 69700),
+(7, 1, '2021-07-15 15:57:24', '2021-07-15 15:57:44', 3, 3, 2, -30, 64680);
 
 -- --------------------------------------------------------
 
@@ -150,7 +152,7 @@ INSERT INTO `shifts` (`id`, `time_start`, `time_end`) VALUES
 CREATE TABLE `slaves` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `fio` text NOT NULL COMMENT 'ФИО',
-  `date_employ` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата принятия на работу',
+  `date_employ` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата принятия на работу',
   `pay_per_shift` int(10) UNSIGNED NOT NULL COMMENT 'З/П за смену (руб)',
   `rank` tinytext NOT NULL COMMENT 'Должность'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -160,7 +162,8 @@ CREATE TABLE `slaves` (
 --
 
 INSERT INTO `slaves` (`id`, `fio`, `date_employ`, `pay_per_shift`, `rank`) VALUES
-(1, 'Оля', '2021-07-14 11:05:13', 1000, 'Продован');
+(1, 'Оля', '2021-07-14 11:05:13', 1000, 'Продован'),
+(2, 'Женька', '2021-07-16 12:51:28', 15000, 'Манагер');
 
 -- --------------------------------------------------------
 
@@ -191,7 +194,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `login`, `slave_id`, `type`) VALUES
-(1, 'prodovan', 1, 3);
+(1, 'prodovan', 1, 3),
+(2, 'manager', 2, 2);
 
 --
 -- Индексы сохранённых таблиц
@@ -272,7 +276,7 @@ ALTER TABLE `containers`
 -- AUTO_INCREMENT для таблицы `fuel_transactions`
 --
 ALTER TABLE `fuel_transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT для таблицы `fuel_types`
 --
@@ -292,12 +296,12 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT для таблицы `slaves`
 --
 ALTER TABLE `slaves`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --

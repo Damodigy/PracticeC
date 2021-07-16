@@ -32,6 +32,7 @@ namespace projectLab {
 		private User current_user;
 
 		private Model_fuel_sale fuel_sale_data;
+		private Model_slave_manager slave_manager_data;
 
 		//private solvers_table_data solvers_data;
 
@@ -51,6 +52,7 @@ namespace projectLab {
 			current_SqlConnection = null;
 			current_user = new User();
 			fuel_sale_data = null;
+			slave_manager_data = null;
 		}
 
 		//триггер после загрузки формы
@@ -63,9 +65,6 @@ namespace projectLab {
 			this.menu_bd_item_break.Enabled = true;
 			load_current_user();
 			create_tabs();
-
-			//solvers_data = new solvers_table_data(ref fuel_sale_instruments, ref current_SqlConnection);
-			//this.fuel_sale_container.Controls.Add(solvers_data.solvers_table);
 			this.work_frame.Visible = true;
 		}
 
@@ -76,8 +75,6 @@ namespace projectLab {
 			this.work_frame.Visible = false;
 			delete_tabs();
 			this.current_user.reset();
-			//this.fuel_sale_container.Controls.RemoveByKey("solvers_table");
-			//solvers_data = null;
 		}
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -141,6 +138,7 @@ namespace projectLab {
 			result.Close();
 		}
 
+		//создает вкладки управления в зависимости от пользователя
 		private void create_tabs(){
 			if(this.current_user.get_type() == user_type.NONE){
 				MessageBox.Show("Пользователь не опознан, обратитесь к админу!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -152,13 +150,26 @@ namespace projectLab {
 				this.fuel_sale_container.Controls.Add(fuel_sale_data.trans_table);
 				return;
 			}
+			if(this.current_user.get_type() == user_type.MANAGER){
+				this.work_frame.TabPages.Add(this.slave_manager_tab);
+				slave_manager_data = new Model_slave_manager(ref slave_manager_instruments, ref current_SqlConnection);
+				this.slave_manager_container.Controls.Add(slave_manager_data.slaves_table);
+				return;
+			}
 		}
 
+		//удаляет созданные вкладки
 		private void delete_tabs(){
 			if(this.current_user.get_type() == user_type.PAYMASTER){
 				this.fuel_sale_container.Controls.RemoveByKey(fuel_sale_data.trans_table.Name);
 				fuel_sale_data = null;
 				this.work_frame.TabPages.RemoveByKey(this.fuel_sale_tab.Name);
+				return;
+			}
+			if(this.current_user.get_type() == user_type.MANAGER){
+				this.slave_manager_container.Controls.RemoveByKey(slave_manager_data.slaves_table.Name);
+				slave_manager_data = null;
+				this.work_frame.TabPages.RemoveByKey(this.slave_manager_tab.Name);
 				return;
 			}
 		}

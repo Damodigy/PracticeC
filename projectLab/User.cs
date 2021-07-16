@@ -11,23 +11,27 @@ namespace projectLab {
 		//Данные + Администрирование
 		ADMIN		= 1,//может всё, также управлять пользователями
 		/*
-		 * SELECT `users`
+		 * GRANT SELECT ON `politeh_prac`.`users` TO 'manager'@'localhost';
 		 * 
-		 * SELECT, LOCK TABLES `containers`
-		 * SELECT, LOCK TABLES `fuel_types`
-		 * SELECT, LOCK TABLES `fuel_transactions`
+		 * GRANT SELECT ON `politeh_prac`.`containers` TO 'manager'@'localhost';
+		 * GRANT SELECT ON `politeh_prac`.`fuel_types` TO 'manager'@'localhost';
+		 * GRANT SELECT ON `politeh_prac`.`fuel_transactions` TO 'manager'@'localhost';
 		 * 
-		 * SELECT, UPDATE, INSERT, DELETE, LOCK TABLES `shifts`
-		 * SELECT, UPDATE, INSERT, DELETE, LOCK TABLES `slaves_shifts`
-		 * SELECT, UPDATE, INSERT, DELETE, LOCK TABLES `slaves`
+		 * GRANT SELECT, UPDATE, INSERT, DELETE ON `politeh_prac`.`shifts` TO 'manager'@'localhost';
+		 * GRANT SELECT, UPDATE, INSERT, DELETE ON `politeh_prac`.`slaves_shifts` TO 'manager'@'localhost';
+		 * GRANT SELECT, UPDATE, INSERT, DELETE ON `politeh_prac`.`slaves` TO 'manager'@'localhost';
+		 *  
+		 * GRANT LOCK TABLES ON `politeh_prac`.* TO 'manager'@'localhost';
 		 */
 		MANAGER		= 2,//может управлять сменами, смотреть статистику
 		/*
 		 * GRANT SELECT ON `politeh_prac`.`users` TO 'prodovan'@'localhost';
-		 * GRANT SELECT, UPDATE ON `politeh_prac`.`containers` TO 'prodovan'@'localhost';
+		 * 
 		 * GRANT SELECT ON `politeh_prac`.`pumps` TO 'prodovan'@'localhost';
 		 * GRANT SELECT ON `politeh_prac`.`fuel_types` TO 'prodovan'@'localhost';
+		 * GRANT SELECT, UPDATE ON `politeh_prac`.`containers` TO 'prodovan'@'localhost';
 		 * GRANT SELECT, UPDATE, INSERT ON `politeh_prac`.`fuel_transactions` TO 'prodovan'@'localhost';
+		 * 
 		 * GRANT LOCK TABLES ON `politeh_prac`.* TO 'prodovan'@'localhost';
 		 */
 		PAYMASTER	= 3,//может продавать бензыч

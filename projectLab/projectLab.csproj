@@ -73,6 +73,7 @@
       <DependentUpon>main_win.cs</DependentUpon>
     </Compile>
     <Compile Include="Model_fuel_sale.cs" />
+    <Compile Include="Model_slave_manager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

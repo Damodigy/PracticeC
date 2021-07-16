@@ -889,7 +889,6 @@ namespace projectLab {
 					return;
 				}
 
-				MySqlDataReader result = null;
 				//заблочим таблицы `fuel_transactions`, `containers`, `fuel_types`
 				MySqlCommand query = new MySqlCommand("LOCK TABLES `fuel_transactions` WRITE, `containers` WRITE, `fuel_types` READ", connect);
 				try{
