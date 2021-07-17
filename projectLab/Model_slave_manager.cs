@@ -561,9 +561,6 @@ namespace projectLab {
 			MySqlDataReader result = null;
 
 			//подготовим запрос на выборку
-			MySqlParameter limit = new MySqlParameter("@limit", str_per_page);
-			MySqlParameter offset = new MySqlParameter("@offset", (current_page-1)*str_per_page);
-
 			query.CommandText = "SELECT `id`, `fio`, `date_employ`, `pay_per_shift`, `rank` FROM `slaves` "+order_by+"LIMIT @limit OFFSET @offset";
 			query.Parameters.AddWithValue("@limit", str_per_page);
 			query.Parameters.AddWithValue("@offset", (current_page-1)*str_per_page);

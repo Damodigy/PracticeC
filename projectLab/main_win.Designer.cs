@@ -41,6 +41,9 @@
 				this.slave_manager_tab = new System.Windows.Forms.TabPage();
 					this.slave_manager_container = new System.Windows.Forms.Panel();
 					this.slave_manager_instruments = new table_instruments();
+				this.shifts_manager_tab = new System.Windows.Forms.TabPage();
+					this.shifts_manager_container = new System.Windows.Forms.Panel();
+					this.shifts_manager_instruments = new table_instruments();
 
 			this.main_status.SuspendLayout();
 			this.main_menu.SuspendLayout();
@@ -50,6 +53,8 @@
 			this.fuel_sale_container.SuspendLayout();
 			this.slave_manager_tab.SuspendLayout();
 			this.slave_manager_container.SuspendLayout();
+			this.shifts_manager_tab.SuspendLayout();
+			this.shifts_manager_container.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// main_status
@@ -211,6 +216,38 @@
 			this.slave_manager_instruments.TabIndex = 1;
 			this.slave_manager_instruments.TabStop = false;
 			this.slave_manager_instruments.Text = "Инструменты";
+			// 
+			// shifts_manager_tab
+			// 
+			this.shifts_manager_tab.Controls.Add(this.shifts_manager_instruments);
+			this.shifts_manager_tab.Controls.Add(this.shifts_manager_container);
+			this.shifts_manager_tab.Location = new System.Drawing.Point(4, 22);
+			this.shifts_manager_tab.Name = "shifts_manager_tab";
+			this.shifts_manager_tab.Padding = new System.Windows.Forms.Padding(3);
+			this.shifts_manager_tab.Size = new System.Drawing.Size(584, 301);
+			this.shifts_manager_tab.TabIndex = 0;
+			this.shifts_manager_tab.Text = "Смены";
+			this.shifts_manager_tab.UseVisualStyleBackColor = true;
+			// 
+			// shifts_manager_container
+			// 
+			this.shifts_manager_container.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			this.shifts_manager_container.AutoScroll = true;
+			this.shifts_manager_container.Location = new System.Drawing.Point(0, 0);
+			this.shifts_manager_container.Name = "shifts_manager_container";
+			this.shifts_manager_container.Size = new System.Drawing.Size(584, 245);
+			this.shifts_manager_container.TabIndex = 0;
+			// 
+			// shifts_manager_instruments
+			// 
+			this.shifts_manager_instruments.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.shifts_manager_instruments.Location = new System.Drawing.Point(3, 251);
+			this.shifts_manager_instruments.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.shifts_manager_instruments.Name = "slave_manager_instruments";
+			this.shifts_manager_instruments.Size = new System.Drawing.Size(578, 47);
+			this.shifts_manager_instruments.TabIndex = 1;
+			this.shifts_manager_instruments.TabStop = false;
+			this.shifts_manager_instruments.Text = "Инструменты";
 
 			// 
 			// main_win
@@ -240,6 +277,11 @@
 			this.slave_manager_container.PerformLayout();
 			this.slave_manager_instruments.ResumeLayout(false);
 			this.slave_manager_instruments.PerformLayout();
+			this.shifts_manager_tab.ResumeLayout(false);
+			this.shifts_manager_container.ResumeLayout(false);
+			this.shifts_manager_container.PerformLayout();
+			this.shifts_manager_instruments.ResumeLayout(false);
+			this.shifts_manager_instruments.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -264,5 +306,8 @@
 			private System.Windows.Forms.TabPage slave_manager_tab;
 				private System.Windows.Forms.Panel slave_manager_container;
 				private table_instruments slave_manager_instruments;
+			private System.Windows.Forms.TabPage shifts_manager_tab;
+				private System.Windows.Forms.Panel shifts_manager_container;
+				private table_instruments shifts_manager_instruments;
 	}
 }

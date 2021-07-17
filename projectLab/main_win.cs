@@ -33,8 +33,7 @@ namespace projectLab {
 
 		private Model_fuel_sale fuel_sale_data;
 		private Model_slave_manager slave_manager_data;
-
-		//private solvers_table_data solvers_data;
+		private Model_shifts_manager shifts_manager_data;
 
 		public main_win() {
 			before_init();
@@ -53,6 +52,7 @@ namespace projectLab {
 			current_user = new User();
 			fuel_sale_data = null;
 			slave_manager_data = null;
+			shifts_manager_data = null;
 		}
 
 		//триггер после загрузки формы
@@ -89,7 +89,7 @@ namespace projectLab {
 						+ "Пользователь:\t"+current_connection_data.user+Environment.NewLine
 						+ "Версия сервера:\t"+current_SqlConnection.ServerVersion+Environment.NewLine
 						+ "Состояние:\t"+current_SqlConnection.State+Environment.NewLine;
-			show_info_dialog("Текущее соединение", info);
+			MessageBox.Show("Текущее соединение", info, MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 		}
 
 		//разрывает текущее соединение, запускает триггер after_success_disconnect
@@ -148,12 +148,18 @@ namespace projectLab {
 				this.work_frame.TabPages.Add(this.fuel_sale_tab);
 				fuel_sale_data = new Model_fuel_sale(ref fuel_sale_instruments, ref current_SqlConnection, current_user.get_id());
 				this.fuel_sale_container.Controls.Add(fuel_sale_data.trans_table);
+
 				return;
 			}
 			if(this.current_user.get_type() == user_type.MANAGER){
 				this.work_frame.TabPages.Add(this.slave_manager_tab);
 				slave_manager_data = new Model_slave_manager(ref slave_manager_instruments, ref current_SqlConnection);
 				this.slave_manager_container.Controls.Add(slave_manager_data.slaves_table);
+
+				this.work_frame.TabPages.Add(this.shifts_manager_tab);
+				shifts_manager_data = new Model_shifts_manager(ref shifts_manager_instruments, ref current_SqlConnection);
+				this.shifts_manager_container.Controls.Add(shifts_manager_data.shifts_table);
+
 				return;
 			}
 		}
@@ -164,12 +170,18 @@ namespace projectLab {
 				this.fuel_sale_container.Controls.RemoveByKey(fuel_sale_data.trans_table.Name);
 				fuel_sale_data = null;
 				this.work_frame.TabPages.RemoveByKey(this.fuel_sale_tab.Name);
+
 				return;
 			}
 			if(this.current_user.get_type() == user_type.MANAGER){
 				this.slave_manager_container.Controls.RemoveByKey(slave_manager_data.slaves_table.Name);
 				slave_manager_data = null;
 				this.work_frame.TabPages.RemoveByKey(this.slave_manager_tab.Name);
+				
+				this.shifts_manager_container.Controls.RemoveByKey(shifts_manager_data.shifts_table.Name);
+				shifts_manager_data = null;
+				this.work_frame.TabPages.RemoveByKey(this.shifts_manager_tab.Name);
+
 				return;
 			}
 		}
@@ -272,15 +284,6 @@ namespace projectLab {
 			}else{
 				return false;
 			}
-		}
-
-		//диалог вывода информации в ричбокс
-		private void show_info_dialog(string title, string text){
-			info_dialog inf_dialog = new info_dialog();
-			inf_dialog.Owner = this;
-			inf_dialog.change_title(title);
-			inf_dialog.textbox.Text = text;
-			inf_dialog.Show();
 		}
 
 		//возвращает строку подключения собранную из структуры connect
