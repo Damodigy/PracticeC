@@ -32,6 +32,7 @@ namespace projectLab {
 		private User current_user;
 
 		private Model_fuel_sale fuel_sale_data;
+		private Model_fuel_buy fuel_buy_data;
 		private Model_slave_manager slave_manager_data;
 		private Model_shifts_manager shifts_manager_data;
 		private Model_container_view container_view_data;
@@ -52,6 +53,7 @@ namespace projectLab {
 			current_SqlConnection = null;
 			current_user = new User();
 			fuel_sale_data = null;
+			fuel_buy_data = null;
 			slave_manager_data = null;
 			shifts_manager_data = null;
 			container_view_data = null;
@@ -92,7 +94,7 @@ namespace projectLab {
 						+ "Пользователь:\t"+current_connection_data.user+Environment.NewLine
 						+ "Версия сервера:\t"+current_SqlConnection.ServerVersion+Environment.NewLine
 						+ "Состояние:\t"+current_SqlConnection.State+Environment.NewLine;
-			MessageBox.Show("Текущее соединение", info, MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+			MessageBox.Show(info, "Текущее соединение", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 		}
 
 		//разрывает текущее соединение, запускает триггер after_success_disconnect
@@ -169,6 +171,17 @@ namespace projectLab {
 
 				return;
 			}
+			if(this.current_user.get_type() == user_type.ENGINEER){
+				this.work_frame.TabPages.Add(this.container_view_tab);
+				container_view_data = new Model_container_view(ref container_view_instruments, ref current_SqlConnection);
+				this.container_view_container.Controls.Add(container_view_data.cont_table);
+
+				this.work_frame.TabPages.Add(this.fuel_buy_tab);
+				fuel_buy_data = new Model_fuel_buy(ref fuel_buy_instruments, ref current_SqlConnection, current_user.get_id());
+				this.fuel_buy_container.Controls.Add(fuel_buy_data.trans_table);
+
+				return;
+			}
 		}
 
 		//удаляет созданные вкладки
@@ -192,6 +205,17 @@ namespace projectLab {
 				this.container_view_container.Controls.RemoveByKey(container_view_data.cont_table.Name);
 				container_view_data = null;
 				this.work_frame.TabPages.RemoveByKey(this.container_view_tab.Name);
+
+				return;
+			}
+			if(this.current_user.get_type() == user_type.ENGINEER){
+				this.container_view_container.Controls.RemoveByKey(container_view_data.cont_table.Name);
+				container_view_data = null;
+				this.work_frame.TabPages.RemoveByKey(this.container_view_tab.Name);
+
+				this.fuel_buy_container.Controls.RemoveByKey(fuel_buy_data.trans_table.Name);
+				fuel_buy_data = null;
+				this.work_frame.TabPages.RemoveByKey(this.fuel_buy_tab.Name);
 
 				return;
 			}

@@ -38,6 +38,9 @@
 				this.fuel_sale_tab = new System.Windows.Forms.TabPage();
 					this.fuel_sale_container = new System.Windows.Forms.Panel();
 					this.fuel_sale_instruments = new table_instruments();
+				this.fuel_buy_tab = new System.Windows.Forms.TabPage();
+					this.fuel_buy_container = new System.Windows.Forms.Panel();
+					this.fuel_buy_instruments = new table_instruments();
 				this.slave_manager_tab = new System.Windows.Forms.TabPage();
 					this.slave_manager_container = new System.Windows.Forms.Panel();
 					this.slave_manager_instruments = new table_instruments();
@@ -54,6 +57,8 @@
 			this.work_frame.SuspendLayout();
 			this.fuel_sale_tab.SuspendLayout();
 			this.fuel_sale_container.SuspendLayout();
+			this.fuel_buy_tab.SuspendLayout();
+			this.fuel_buy_container.SuspendLayout();
 			this.slave_manager_tab.SuspendLayout();
 			this.slave_manager_container.SuspendLayout();
 			this.shifts_manager_tab.SuspendLayout();
@@ -191,6 +196,39 @@
 			this.fuel_sale_instruments.TabStop = false;
 			this.fuel_sale_instruments.Text = "Инструменты";
 			// 
+			// fuel_buy_tab
+			// 
+			this.fuel_buy_tab.Controls.Add(this.fuel_buy_instruments);
+			this.fuel_buy_tab.Controls.Add(this.fuel_buy_container);
+			this.fuel_buy_tab.Location = new System.Drawing.Point(4, 22);
+			this.fuel_buy_tab.Name = "fuel_buy_tab";
+			this.fuel_buy_tab.Padding = new System.Windows.Forms.Padding(3);
+			this.fuel_buy_tab.Size = new System.Drawing.Size(584, 301);
+			this.fuel_buy_tab.TabIndex = 0;
+			this.fuel_buy_tab.Text = "Заправка контейнеров";
+			this.fuel_buy_tab.UseVisualStyleBackColor = true;
+			// 
+			// fuel_buy_container
+			// 
+			this.fuel_buy_container.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			this.fuel_buy_container.AutoScroll = true;
+			//this.fuel_buy_container.Controls.Add(this.solvers_table);
+			this.fuel_buy_container.Location = new System.Drawing.Point(0, 0);
+			this.fuel_buy_container.Name = "fuel_buy_container";
+			this.fuel_buy_container.Size = new System.Drawing.Size(584, 245);
+			this.fuel_buy_container.TabIndex = 0;
+			// 
+			// fuel_buy_instruments
+			// 
+			this.fuel_buy_instruments.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.fuel_buy_instruments.Location = new System.Drawing.Point(3, 251);
+			this.fuel_buy_instruments.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.fuel_buy_instruments.Name = "fuel_buy_instruments";
+			this.fuel_buy_instruments.Size = new System.Drawing.Size(578, 47);
+			this.fuel_buy_instruments.TabIndex = 1;
+			this.fuel_buy_instruments.TabStop = false;
+			this.fuel_buy_instruments.Text = "Инструменты";
+			// 
 			// slave_manager_tab
 			// 
 			this.slave_manager_tab.Controls.Add(this.slave_manager_instruments);
@@ -310,6 +348,11 @@
 			this.fuel_sale_container.PerformLayout();
 			this.fuel_sale_instruments.ResumeLayout(false);
 			this.fuel_sale_instruments.PerformLayout();
+			this.fuel_buy_tab.ResumeLayout(false);
+			this.fuel_buy_container.ResumeLayout(false);
+			this.fuel_buy_container.PerformLayout();
+			this.fuel_buy_instruments.ResumeLayout(false);
+			this.fuel_buy_instruments.PerformLayout();
 			this.slave_manager_tab.ResumeLayout(false);
 			this.slave_manager_container.ResumeLayout(false);
 			this.slave_manager_container.PerformLayout();
@@ -346,6 +389,9 @@
 			private System.Windows.Forms.TabPage fuel_sale_tab;
 				private System.Windows.Forms.Panel fuel_sale_container;
 				private table_instruments fuel_sale_instruments;
+			private System.Windows.Forms.TabPage fuel_buy_tab;
+				private System.Windows.Forms.Panel fuel_buy_container;
+				private table_instruments fuel_buy_instruments;
 			private System.Windows.Forms.TabPage slave_manager_tab;
 				private System.Windows.Forms.Panel slave_manager_container;
 				private table_instruments slave_manager_instruments;

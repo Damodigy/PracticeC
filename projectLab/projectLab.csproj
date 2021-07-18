@@ -67,6 +67,7 @@
       <DependentUpon>main_win.cs</DependentUpon>
     </Compile>
     <Compile Include="Model_container_view.cs" />
+    <Compile Include="Model_fuel_buy.cs" />
     <Compile Include="Model_fuel_sale.cs" />
     <Compile Include="Model_shifts_manager.cs" />
     <Compile Include="Model_slave_manager.cs" />
