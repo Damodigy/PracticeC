@@ -389,29 +389,6 @@ private table_instruments instruments;
 	private void reload_data()
 	{
 		MySqlDataReader result = null;
-		//получим время начала и конца текущей смены
-		MySqlCommand query = new MySqlCommand("SELECT `time_start`, `time_end` FROM `shifts` WHERE NOW() >= `time_start` AND NOW() <= `time_end`", connect);
-		try
-		{
-			result = query.ExecuteReader();
-		}
-		catch (Exception ex)
-		{
-			MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-			return;
-		}
-		DateTime s_time_start, s_time_end;
-		if (result.Read())
-		{
-			s_time_start = (DateTime)result.GetValue(0);
-			s_time_end = (DateTime)result.GetValue(1);
-		}
-		else
-		{
-			MessageBox.Show("На данный момент смена не активна. Обратитесь к манагеру", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-			return;
-		}
-		result.Close();
 
 		//заблочим таблицы `fuel_transactions`, `containers`, `fuel_types`, `pumps`
 		query.CommandText = "LOCK TABLES `fuel_transactions` READ, `containers` READ, `fuel_types` READ, `pumps` READ";
