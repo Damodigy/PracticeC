@@ -405,6 +405,13 @@ namespace projectLab {
 					//если она добавлена но удалена, пропускаем
 					if(col_id[i].Font.Strikeout)
 						continue;
+					if(col_time_start[i].Value >= col_time_end[i].Value){
+						MessageBox.Show("Строка "+(i+1)+" имеет дату старта больше даты конца"+Environment.NewLine
+							+"Строка проигнорирована"
+							, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+						continue;
+					}
+
 					tmp = new MySqlCommand("INSERT INTO `shifts` (`time_start`, `time_end`) VALUES (@time_start, @time_end)", connect);
 					tmp.Parameters.AddWithValue("@time_start", col_time_start[i].Value);
 					tmp.Parameters.AddWithValue("@time_end", col_time_end[i].Value);
@@ -435,6 +442,12 @@ namespace projectLab {
 
 				//обновление существующих строк
 				}else if(col_id[i].Text.Substring(col_id[i].Text.Length-1) == "*"){
+					if(col_time_start[i].Value >= col_time_end[i].Value){
+						MessageBox.Show("Строка "+(i+1)+" имеет дату старта больше даты конца"+Environment.NewLine
+							+"Строка проигнорирована"
+							, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+						continue;
+					}
 					tmp = new MySqlCommand("UPDATE `shifts` SET `time_start` = @time_start, `time_end` = @time_end WHERE `id` = @id", connect);
 					tmp.Parameters.AddWithValue("@time_start", col_time_start[i].Value);
 					tmp.Parameters.AddWithValue("@time_end", col_time_end[i].Value);

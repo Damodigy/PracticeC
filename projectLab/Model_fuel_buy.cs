@@ -33,11 +33,9 @@ namespace Model_fuel_buy{
 }
 
 namespace projectLab{
-	class Model_fuel_buy{
+	class Model_fuel_buy :IDisposable{
 		private table_instruments instruments;
 		private MySqlConnection connect;
-
-		//private MySqlCommand get_count_users;
 
 		private UInt32 str_per_page;
 		private UInt32 current_page;

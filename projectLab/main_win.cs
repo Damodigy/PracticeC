@@ -36,6 +36,7 @@ namespace projectLab {
 		private Model_slave_manager slave_manager_data;
 		private Model_shifts_manager shifts_manager_data;
 		private Model_container_view container_view_data;
+		private Stat_view_fuel stat_view_fuel_data;
 
 		public main_win() {
 			before_init();
@@ -57,6 +58,7 @@ namespace projectLab {
 			slave_manager_data = null;
 			shifts_manager_data = null;
 			container_view_data = null;
+			stat_view_fuel_data = null;
 		}
 
 		//триггер после загрузки формы
@@ -169,6 +171,10 @@ namespace projectLab {
 				container_view_data = new Model_container_view(ref container_view_instruments, ref current_SqlConnection);
 				this.container_view_container.Controls.Add(container_view_data.cont_table);
 
+				this.work_frame.TabPages.Add(this.stat_view_fuel_tab);
+				stat_view_fuel_data = new Stat_view_fuel(ref stat_view_fuel_instruments, ref current_SqlConnection);
+				this.stat_view_fuel_container.Controls.Add(stat_view_fuel_data.stat_chart);
+
 				return;
 			}
 			if(this.current_user.get_type() == user_type.ENGINEER){
@@ -205,6 +211,10 @@ namespace projectLab {
 				this.container_view_container.Controls.RemoveByKey(container_view_data.cont_table.Name);
 				container_view_data = null;
 				this.work_frame.TabPages.RemoveByKey(this.container_view_tab.Name);
+				
+				this.stat_view_fuel_container.Controls.RemoveByKey(stat_view_fuel_data.stat_chart.Name);
+				stat_view_fuel_data = null;
+				this.work_frame.TabPages.RemoveByKey(this.stat_view_fuel_tab.Name);
 
 				return;
 			}

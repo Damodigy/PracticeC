@@ -50,6 +50,9 @@
 				this.container_view_tab = new System.Windows.Forms.TabPage();
 					this.container_view_container = new System.Windows.Forms.Panel();
 					this.container_view_instruments = new table_instruments();
+				this.stat_view_fuel_tab = new System.Windows.Forms.TabPage();
+					this.stat_view_fuel_container = new System.Windows.Forms.Panel();
+					this.stat_view_fuel_instruments = new table_instruments();
 
 			this.main_status.SuspendLayout();
 			this.main_menu.SuspendLayout();
@@ -65,6 +68,8 @@
 			this.shifts_manager_container.SuspendLayout();
 			this.container_view_tab.SuspendLayout();
 			this.container_view_container.SuspendLayout();
+			this.stat_view_fuel_tab.SuspendLayout();
+			this.stat_view_fuel_container.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// main_status
@@ -324,6 +329,38 @@
 			this.container_view_instruments.TabIndex = 1;
 			this.container_view_instruments.TabStop = false;
 			this.container_view_instruments.Text = "Инструменты";
+			// 
+			// stat_view_fuel_tab
+			// 
+			this.stat_view_fuel_tab.Controls.Add(this.stat_view_fuel_instruments);
+			this.stat_view_fuel_tab.Controls.Add(this.stat_view_fuel_container);
+			this.stat_view_fuel_tab.Location = new System.Drawing.Point(4, 22);
+			this.stat_view_fuel_tab.Name = "stat_view_fuel_tab";
+			this.stat_view_fuel_tab.Padding = new System.Windows.Forms.Padding(3);
+			this.stat_view_fuel_tab.Size = new System.Drawing.Size(584, 301);
+			this.stat_view_fuel_tab.TabIndex = 0;
+			this.stat_view_fuel_tab.Text = "График прибыли";
+			this.stat_view_fuel_tab.UseVisualStyleBackColor = true;
+			// 
+			// stat_view_fuel_container
+			// 
+			this.stat_view_fuel_container.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			this.stat_view_fuel_container.AutoScroll = true;
+			this.stat_view_fuel_container.Location = new System.Drawing.Point(0, 0);
+			this.stat_view_fuel_container.Name = "stat_view_fuel_container";
+			this.stat_view_fuel_container.Size = new System.Drawing.Size(584, 245);
+			this.stat_view_fuel_container.TabIndex = 0;
+			// 
+			// stat_view_fuel_instruments
+			// 
+			this.stat_view_fuel_instruments.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.stat_view_fuel_instruments.Location = new System.Drawing.Point(3, 251);
+			this.stat_view_fuel_instruments.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.stat_view_fuel_instruments.Name = "stat_view_fuel_instruments";
+			this.stat_view_fuel_instruments.Size = new System.Drawing.Size(578, 47);
+			this.stat_view_fuel_instruments.TabIndex = 1;
+			this.stat_view_fuel_instruments.TabStop = false;
+			this.stat_view_fuel_instruments.Text = "Инструменты";
 
 			// 
 			// main_win
@@ -368,6 +405,11 @@
 			this.container_view_container.PerformLayout();
 			this.container_view_instruments.ResumeLayout(false);
 			this.container_view_instruments.PerformLayout();
+			this.stat_view_fuel_tab.ResumeLayout(false);
+			this.stat_view_fuel_container.ResumeLayout(false);
+			this.stat_view_fuel_container.PerformLayout();
+			this.stat_view_fuel_instruments.ResumeLayout(false);
+			this.stat_view_fuel_instruments.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -401,5 +443,8 @@
 			private System.Windows.Forms.TabPage container_view_tab;
 				private System.Windows.Forms.Panel container_view_container;
 				private table_instruments container_view_instruments;
+			private System.Windows.Forms.TabPage stat_view_fuel_tab;
+				private System.Windows.Forms.Panel stat_view_fuel_container;
+				private table_instruments stat_view_fuel_instruments;
 	}
 }
