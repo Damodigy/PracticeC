@@ -169,7 +169,7 @@ namespace projectLab {
 			// 
 			this.checker_sort_id.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			this.checker_sort_id.AutoSize = true;
-			this.checker_sort_id.Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+			this.checker_sort_id.Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 2);
 			this.checker_sort_id.Location = new System.Drawing.Point(31, 2);
 			this.checker_sort_id.Margin = new System.Windows.Forms.Padding(0);
 			this.checker_sort_id.Name = "checker_sort_id";
@@ -207,7 +207,7 @@ namespace projectLab {
 			// 
 			this.checker_sort_time_start.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			this.checker_sort_time_start.AutoSize = true;
-			this.checker_sort_time_start.Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+			this.checker_sort_time_start.Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 2);
 			this.checker_sort_time_start.Location = new System.Drawing.Point(126, 2);
 			this.checker_sort_time_start.Margin = new System.Windows.Forms.Padding(0);
 			this.checker_sort_time_start.Name = "checker_sort_time_start";
@@ -335,7 +335,7 @@ namespace projectLab {
 				col_but_add[i].Anchor = System.Windows.Forms.AnchorStyles.None;
 				col_but_add[i].Cursor = System.Windows.Forms.Cursors.Hand;
 				col_but_add[i].FlatStyle = System.Windows.Forms.FlatStyle.System;
-				//col_but_add[i].Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+				//col_but_add[i].Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 2);
 				col_but_add[i].Location = new System.Drawing.Point(548, 32);
 				col_but_add[i].Name = "col_but_add_"+i;
 				col_but_add[i].AutoSize = true;

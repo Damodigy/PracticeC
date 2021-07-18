@@ -175,7 +175,7 @@ namespace projectLab {
 			// 
 			this.checker_sort_id.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			this.checker_sort_id.AutoSize = true;
-			this.checker_sort_id.Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+			this.checker_sort_id.Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 2);
 			this.checker_sort_id.Location = new System.Drawing.Point(31, 2);
 			this.checker_sort_id.Margin = new System.Windows.Forms.Padding(0);
 			this.checker_sort_id.Name = "checker_sort_id";
@@ -213,7 +213,7 @@ namespace projectLab {
 			// 
 			this.checker_sort_name.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			this.checker_sort_name.AutoSize = true;
-			this.checker_sort_name.Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+			this.checker_sort_name.Font = new System.Drawing.Font("Webdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 2);
 			this.checker_sort_name.Location = new System.Drawing.Point(126, 2);
 			this.checker_sort_name.Margin = new System.Windows.Forms.Padding(0);
 			this.checker_sort_name.Name = "checker_sort_name";
@@ -682,6 +682,10 @@ namespace projectLab {
 		}
 
 		private void reload_data_with_save(Object sender, EventArgs e){
+			/*
+			if(connect.State == System.Data.ConnectionState.Closed)
+				connect.Open();
+			 */
 			List<MySqlCommand> commands = get_updates();
 			if(commands.Count > 0){
 				DialogResult ret = MessageBox.Show("Имеются несохраненные данные. Произвести обновление?", "Несохраненные данные", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);

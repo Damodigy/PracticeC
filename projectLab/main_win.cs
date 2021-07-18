@@ -34,6 +34,7 @@ namespace projectLab {
 		private Model_fuel_sale fuel_sale_data;
 		private Model_slave_manager slave_manager_data;
 		private Model_shifts_manager shifts_manager_data;
+		private Model_container_view container_view_data;
 
 		public main_win() {
 			before_init();
@@ -53,6 +54,7 @@ namespace projectLab {
 			fuel_sale_data = null;
 			slave_manager_data = null;
 			shifts_manager_data = null;
+			container_view_data = null;
 		}
 
 		//триггер после загрузки формы
@@ -62,7 +64,8 @@ namespace projectLab {
 		//триггер после успешного подключения к БД
 		private void after_success_connect(){
 			this.menu_bd_item_current.Enabled = true;
-			this.menu_bd_item_break.Enabled = true;
+			//this.menu_bd_item_break.Enabled = true;
+			this.menu_bd_item_fast.Enabled = false;
 			load_current_user();
 			create_tabs();
 			this.work_frame.Visible = true;
@@ -71,7 +74,7 @@ namespace projectLab {
 		//триггер после отключения от БД
 		private void after_success_disconnect(){
 			this.menu_bd_item_current.Enabled = false;
-			this.menu_bd_item_break.Enabled = false;
+			//this.menu_bd_item_break.Enabled = false;
 			this.work_frame.Visible = false;
 			delete_tabs();
 			this.current_user.reset();
@@ -160,6 +163,10 @@ namespace projectLab {
 				shifts_manager_data = new Model_shifts_manager(ref shifts_manager_instruments, ref current_SqlConnection);
 				this.shifts_manager_container.Controls.Add(shifts_manager_data.shifts_table);
 
+				this.work_frame.TabPages.Add(this.container_view_tab);
+				container_view_data = new Model_container_view(ref container_view_instruments, ref current_SqlConnection);
+				this.container_view_container.Controls.Add(container_view_data.cont_table);
+
 				return;
 			}
 		}
@@ -181,6 +188,10 @@ namespace projectLab {
 				this.shifts_manager_container.Controls.RemoveByKey(shifts_manager_data.shifts_table.Name);
 				shifts_manager_data = null;
 				this.work_frame.TabPages.RemoveByKey(this.shifts_manager_tab.Name);
+				
+				this.container_view_container.Controls.RemoveByKey(container_view_data.cont_table.Name);
+				container_view_data = null;
+				this.work_frame.TabPages.RemoveByKey(this.container_view_tab.Name);
 
 				return;
 			}
